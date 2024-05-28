@@ -68,6 +68,12 @@ namespace rxNorm.Net.Api.Wrapper
 
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
+
+        public Task<string[]> GetDisplayTermsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
 
