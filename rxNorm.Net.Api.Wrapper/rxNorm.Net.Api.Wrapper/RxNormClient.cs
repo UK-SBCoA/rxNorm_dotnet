@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
 
 namespace rxNorm.Net.Api.Wrapper
@@ -69,11 +70,36 @@ namespace rxNorm.Net.Api.Wrapper
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
 
-        public Task<string[]> GetDisplayTermsAsync()
+        public async Task<string[]> GetDisplayTermsAsync(string name)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrWhiteSpace(name))
+                return new string[] { };
+
+            string url = $"{_options.Host}/displaynames.json";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Response responseDto = JsonSerializer.Deserialize<Response>(content);
+
+                if (responseDto.DisplayTermsList.Term != null)
+                {
+                    return responseDto.DisplayTermsList.Term.ToArray();
+                }
+                else
+                {
+                    return new string[] { };
+                }
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new string[] { };
+            }
+
+            throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
 
     }
 }
-
