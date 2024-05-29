@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace rxNorm.Net.Api.Wrapper.Dtos
@@ -7,6 +8,10 @@ namespace rxNorm.Net.Api.Wrapper.Dtos
     {
         [JsonPropertyName("idGroup")]
         public RxCUICollection IdGroup { get; set; }
+
+        [JsonPropertyName("displayTermsList")]
+        public DisplayTermsList DisplayTermsList { get; set; }
+
     }
 }
 
