@@ -21,10 +21,10 @@ public class FindRxCUIByStringTests
     [Fact]
     public async void GetRxCUIs_CurrentScopeSearch_FindsMatch()
     {
-        string[] rxCUIs = await _rxNormClient.FindRxCUIByStringAsync("lidocaine hydrochloride 1 % Topical Cream", 1, null, null);
+        string[] rxCUIs = await _rxNormClient.FindRxCUIByStringAsync("lidocaine hydrochloride 0.02 MG/MG", 1, null, null);
 
         Assert.Equal(1, rxCUIs.Length);
-        Assert.Equal("1011326", rxCUIs[0]);
+        Assert.Equal("1011799", rxCUIs[0]);
 
     }
 
