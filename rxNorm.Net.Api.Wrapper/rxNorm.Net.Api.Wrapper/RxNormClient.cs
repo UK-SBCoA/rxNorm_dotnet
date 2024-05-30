@@ -70,11 +70,8 @@ namespace rxNorm.Net.Api.Wrapper
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
 
-        public async Task<string[]> GetDisplayTermsAsync(string name)
+        public async Task<string[]> GetDisplayTermsAsync()
         {
-            if (String.IsNullOrWhiteSpace(name))
-                return new string[] { };
-
             string url = $"{_options.Host}/displaynames.json";
 
             var response = await _httpClient.GetAsync(url);
