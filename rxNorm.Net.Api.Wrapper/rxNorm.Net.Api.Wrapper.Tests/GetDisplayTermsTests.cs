@@ -19,11 +19,8 @@ namespace rxNorm.Net.Api.Wrapper.Tests
             string[] terms = await _rxNormClient.GetDisplayTermsAsync();
 
             Assert.NotEmpty(terms);
-
-            string firtTerm = terms[0];
             
         }
-
 	}
 }
 
