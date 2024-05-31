@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -97,5 +98,17 @@ namespace rxNorm.Net.Api.Wrapper
 
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
+
+        public async Task<string[]> SearchDisplayTermsAsync(string searchString)
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return Array.Empty<string>();
+
+            var allTerms = await GetDisplayTermsAsync();
+            var filteredTerms = allTerms.Where(term => term.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            return filteredTerms;
+        }
+
     }
 }
