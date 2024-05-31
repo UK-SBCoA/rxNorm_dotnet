@@ -19,7 +19,20 @@ namespace rxNorm.Net.Api.Wrapper.Tests
             string[] terms = await _rxNormClient.GetDisplayTermsAsync();
 
             Assert.NotEmpty(terms);
+
+            string firtTerm = terms[0];
             
+        }
+
+        [Fact]
+        public async void GetDisplayTerms_FindIbuprofen_FindsTerms()
+        {
+            string[] terms = await _rxNormClient.GetDisplayTermsAsync();
+
+            bool ibuprofenExist = terms.Contains("Ibuprofen");
+
+
+            Assert.True(ibuprofenExist);
         }
 	}
 }
