@@ -25,15 +25,14 @@ namespace rxNorm.Net.Api.Wrapper.Tests
         }
 
         [Fact]
-        public async void GetDisplayTerms_FindIbuprofen_FindsTerms()
+        public async Task SearchDisplayTermsAsync_FindIbuprofen_FindsTerms()
         {
-            string[] terms = await _rxNormClient.GetDisplayTermsAsync();
+            var terms = await _rxNormClient.SearchDisplayTermsAsync("ibuprofen");
 
-            bool ibuprofenExist = terms.Contains("Ibuprofen");
-
+            bool ibuprofenExist = terms.Any(term => term.Contains("ibuprofen", StringComparison.OrdinalIgnoreCase));
 
             Assert.True(ibuprofenExist);
         }
-	}
+    }
 }
 
