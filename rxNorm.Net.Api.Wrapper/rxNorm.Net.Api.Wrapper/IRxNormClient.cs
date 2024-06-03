@@ -8,6 +8,7 @@ namespace rxNorm.Net.Api.Wrapper
     {
         Task<string[]> FindRxCUIByStringAsync(string name, int? scopeOfSearch = null, string[] sourceLists = null, int? precision = null);
         Task<string[]> GetDisplayTermsAsync();
+        Task<string[]> SearchDisplayTermsAsync(string searchString);
     }
 }
 
