@@ -99,15 +99,39 @@ namespace rxNorm.Net.Api.Wrapper
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
 
-        public async Task<string[]> SearchDisplayTermsAsync(string searchString)
+        public async Task<int> CountDisplayTermsAsync(string searchString)
+        {
+            int count = 0;
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var allTerms = await GetDisplayTermsAsync();
+
+                if (allTerms != null)
+                {
+                    count = allTerms
+                        .Where(term => term.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                        .Count();
+                }
+            }
+
+            return count;
+        }
+
+        public async Task<string[]> SearchDisplayTermsAsync(string searchString, int pageSize = 10, int pageIndex = 1)
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return Array.Empty<string>();
 
             var allTerms = await GetDisplayTermsAsync();
-            var filteredTerms = allTerms.Where(term => term.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToArray();
 
-            return filteredTerms;
+            var filteredTermsAndPaginated = allTerms
+                .Where(term => term.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToArray();
+
+            return filteredTermsAndPaginated;
         }
 
     }
