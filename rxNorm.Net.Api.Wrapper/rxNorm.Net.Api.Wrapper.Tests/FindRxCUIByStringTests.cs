@@ -33,7 +33,7 @@ public class FindRxCUIByStringTests
     {
         string[] rxCUIs = await _rxNormClient.FindRxCUIByStringAsync("Advil 200 mg Tab");
 
-        Assert.Equal(0, rxCUIs.Length);
+        Assert.Empty(rxCUIs);
     }
 
     [Fact]
