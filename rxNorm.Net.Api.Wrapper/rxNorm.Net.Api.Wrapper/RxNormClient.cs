@@ -28,10 +28,10 @@ namespace rxNorm.Net.Api.Wrapper
         /// <summary>
         /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.findRxcuiByString.html
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name parameter must completely match a string from an RxNorm vocabulary</param>
         /// <param name="scopeOfSearch"></param>
         /// <param name="sourceLists"></param>
-        /// <param name="precision"></param>
+        /// <param name="precision">0 or 1 or 2</param>
         /// <returns></returns>
         public async Task<string[]> FindRxCUIByStringAsync(string name, int? scopeOfSearch = null, string[] sourceLists = null, int? precision = null)
         {
