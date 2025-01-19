@@ -21,27 +21,27 @@ public class FindRxCUIByStringTests
     [Fact]
     public async void GetRxCUIs_CurrentScopeSearch_FindsMatch()
     {
-        string[] rxCUIs = await _rxNormClient.FindRxCUIByStringAsync("lidocaine hydrochloride 0.02 MG/MG", 1, null, null);
+        string rxCUI = await _rxNormClient.FindRxCUIByStringAsync("lidocaine hydrochloride 0.02 MG/MG", 1, null, null);
 
-        Assert.Equal(1, rxCUIs.Length);
-        Assert.Equal("1011799", rxCUIs[0]);
+        Assert.NotNull(rxCUI);
+        Assert.Equal("1011799", rxCUI);
 
     }
 
     [Fact]
     public async void GetRxCUIs_ForExactSearch_NoResult()
     {
-        string[] rxCUIs = await _rxNormClient.FindRxCUIByStringAsync("Advil 200 mg Tab");
+        string rxCUI = await _rxNormClient.FindRxCUIByStringAsync("Advil 200 mg Tab");
 
-        Assert.Empty(rxCUIs);
+        Assert.Empty(rxCUI);
     }
 
     [Fact]
     public async void GetRxCUIs_NormalizedSearch_FindsSimilarMatch()
     {
-        string[] rxCUIs = await _rxNormClient.FindRxCUIByStringAsync("Advil 200 mg Tab", null, null, 1);
+        string rxCUI = await _rxNormClient.FindRxCUIByStringAsync("Advil 200 mg Tab", null, null, 1);
 
-        Assert.Equal(1, rxCUIs.Length);
-        Assert.Equal("153008", rxCUIs[0]);
+        Assert.NotNull(rxCUI);
+        Assert.Equal("153008", rxCUI);
     }
 }
