@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
+using rxNorm.Net.Api.Wrapper.Models;
 
 namespace rxNorm.Net.Api.Wrapper
 {
@@ -33,10 +35,10 @@ namespace rxNorm.Net.Api.Wrapper
         /// <param name="sourceLists"></param>
         /// <param name="precision">0 or 1 or 2</param>
         /// <returns></returns>
-        public async Task<string[]> FindRxCUIByStringAsync(string name, int? scopeOfSearch = null, string[] sourceLists = null, int? precision = null)
+        public async Task<string> FindRxCUIByStringAsync(string name, int? scopeOfSearch = null, string[] sourceLists = null, int? precision = null)
         {
             if (String.IsNullOrWhiteSpace(name))
-                return new string[] { };
+                return "";
 
             string url = $"{_options.Host}/rxcui.json?name={WebUtility.UrlEncode(name)}";
 
@@ -54,18 +56,19 @@ namespace rxNorm.Net.Api.Wrapper
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Response responseDto = JsonSerializer.Deserialize<Response>(content);
+                FindRxCUIResponse responseDto = JsonSerializer.Deserialize<FindRxCUIResponse>(content);
 
-                if (responseDto.IdGroup.RxCUIs != null)
+                // Only one RxCUI should be returned if an exact match was found (even though an json array is used)
+                if (responseDto.IdGroup.RxNormId != null && responseDto.IdGroup.RxNormId.Length == 1)
                 {
-                    return responseDto.IdGroup.RxCUIs;
+                    return responseDto.IdGroup.RxNormId.First();
                 }
                 else
-                    return new string[] { };
+                    return "";
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return new string[] { };
+                return "";
             }
 
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
@@ -80,7 +83,7 @@ namespace rxNorm.Net.Api.Wrapper
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Response responseDto = JsonSerializer.Deserialize<Response>(content);
+                GetDisplayTermsResponse responseDto = JsonSerializer.Deserialize<GetDisplayTermsResponse>(content);
 
                 if (responseDto.DisplayTermsList.Term != null)
                 {
@@ -134,5 +137,15 @@ namespace rxNorm.Net.Api.Wrapper
             return filteredTermsAndPaginated;
         }
 
+        /// <summary>
+        /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.getApproximateMatch.html
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Task<List<ApproximateMatch>> GetApproximateMatches(string searchString, int pageSize = 20)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
