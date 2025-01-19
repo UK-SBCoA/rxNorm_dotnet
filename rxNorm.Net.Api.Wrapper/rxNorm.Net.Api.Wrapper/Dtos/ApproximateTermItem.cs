@@ -12,13 +12,16 @@ namespace rxNorm.Net.Api.Wrapper.Dtos
         public string RxAUI { get; set; }
 
         [JsonPropertyName("score")]
-        public decimal Score { get; set; }
+        public string Score { get; set; }
 
         [JsonPropertyName("rank")]
-        public int Rank { get; set; }
+        public string Rank { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
+        [JsonPropertyName("source")]
+        public string Source { get; set; }
     }
 }
 

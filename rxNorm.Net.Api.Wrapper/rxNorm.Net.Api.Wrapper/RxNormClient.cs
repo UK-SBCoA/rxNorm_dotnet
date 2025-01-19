@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
-using rxNorm.Net.Api.Wrapper.Models;
 
 namespace rxNorm.Net.Api.Wrapper
 {
@@ -143,9 +142,42 @@ namespace rxNorm.Net.Api.Wrapper
         /// <param name="searchString"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task<List<ApproximateMatch>> GetApproximateMatches(string searchString, int pageSize = 20)
+        public async Task<List<ApproximateTermItem>> GetApproximateMatches(string searchString, bool includeNullNames = false, int pageSize = 20)
         {
-            throw new NotImplementedException();
+            List<ApproximateTermItem> matches = new List<ApproximateTermItem>();
+
+            if (String.IsNullOrWhiteSpace(searchString))
+                return matches;
+
+            string url = $"{_options.Host}/approximateTerm.json?term={WebUtility.UrlEncode(searchString)}";
+
+            if (pageSize != 20)
+                url += $"&maxEntries={pageSize}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                ApproximateTermResponse responseDto = JsonSerializer.Deserialize<ApproximateTermResponse>(content);
+
+                // Only one RxCUI should be returned if an exact match was found (even though an json array is used)
+                if (responseDto.ApproximateGroup != null && responseDto.ApproximateGroup.Candidate != null)
+                {
+                    if (includeNullNames)
+                        return responseDto.ApproximateGroup.Candidate.ToList();
+                    else
+                        return responseDto.ApproximateGroup.Candidate.Where(m => String.IsNullOrWhiteSpace(m.Name) == false).ToList();
+                }
+                else
+                    return matches;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return matches;
+            }
+
+            throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
     }
 }
