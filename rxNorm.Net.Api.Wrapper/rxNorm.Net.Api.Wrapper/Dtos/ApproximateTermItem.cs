@@ -9,19 +9,19 @@ namespace rxNorm.Net.Api.Wrapper.Dtos
         public string RxCUI { get; set; }
 
         [JsonPropertyName("rxaui")]
-        public string RxAUI { get; set; }
+        public string? RxAUI { get; set; }
 
         [JsonPropertyName("score")]
-        public string Score { get; set; }
+        public string? Score { get; set; }
 
         [JsonPropertyName("rank")]
-        public string Rank { get; set; }
+        public string? Rank { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
 
         [JsonPropertyName("source")]
-        public string Source { get; set; }
+        public string? Source { get; set; }
     }
 }
 
