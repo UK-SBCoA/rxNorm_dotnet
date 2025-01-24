@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
@@ -175,6 +176,38 @@ namespace rxNorm.Net.Api.Wrapper
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return matches;
+            }
+
+            throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
+        }
+
+        public async Task<List<DrugsCollection>> GetDrugs(string name)
+        {
+            List<DrugsCollection> items = new List<DrugsCollection>();
+
+            if (String.IsNullOrWhiteSpace(name))
+                return items;
+
+            string url = $"{_options.Host}/drugs.json?name={WebUtility.UrlEncode(name)}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                DrugsResponse responseDto = JsonSerializer.Deserialize<DrugsResponse>(content);
+
+                // Only one RxCUI should be returned if an exact match was found (even though an json array is used)
+                if (responseDto.Group != null && responseDto.Group.Results != null)
+                {
+                    return responseDto.Group.Results.ToList();
+                }
+                else
+                    return items;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return items;
             }
 
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");

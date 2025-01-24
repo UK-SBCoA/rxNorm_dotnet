@@ -14,6 +14,8 @@ namespace rxNorm.Net.Api.Wrapper
         Task<string[]> SearchDisplayTermsAsync(string searchString, int pageSize = 10, int pageIndex = 1);
 
         Task<List<ApproximateTermItem>> GetApproximateMatches(string searchString, bool includeNullNames = false, int pageSize = 20);
+
+        Task<List<DrugsCollection>> GetDrugs(string name);
     }
 }
 
