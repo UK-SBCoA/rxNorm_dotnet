@@ -15,7 +15,7 @@ namespace rxNorm.Net.Api.Wrapper
 
         public RxNormClientOptions()
         {
-            Host = "http://rxnav.nlm.nih.gov/REST";
+            Host = "https://rxnav.nlm.nih.gov/REST";
         }
     }
 }
