@@ -28,6 +28,37 @@ namespace rxNorm.Net.Api.Wrapper
         }
 
         /// <summary>
+        ///  Determines whether the specified RxNorm concept is current.
+        /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.getRxcuiHistoryStatus.html
+        /// </summary>
+        /// <param rxcui="rxcui">The RxNorm concept identifier</param>
+        /// <returns>True if the RxNorm concept is marked as current, otherwise false.</returns>
+        public async Task<bool?> RxNormIsCurrentAsync(string rxcui)
+        {
+            if (String.IsNullOrWhiteSpace(rxcui))
+                return null;
+
+            string url = $"{_options.Host}/rxcui/{rxcui}/historystatus.json";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                RxNormIsCurrentResponse? responseDto = JsonSerializer.Deserialize<RxNormIsCurrentResponse>(content);
+
+                var isCurrentValue = responseDto?.StatusHistory?.MetaData?.IsCurrent;
+
+                if (isCurrentValue != null)
+                {
+                    return isCurrentValue.Equals("YES", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.findRxcuiByString.html
         /// </summary>
         /// <param name="name">The name parameter must completely match a string from an RxNorm vocabulary</param>

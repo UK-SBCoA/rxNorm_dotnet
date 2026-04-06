@@ -16,6 +16,8 @@ namespace rxNorm.Net.Api.Wrapper
         Task<List<ApproximateTermItem>> GetApproximateMatches(string searchString, bool includeNullNames = false, int pageSize = 20);
 
         Task<List<DrugsCollection>> GetDrugs(string name);
+
+        Task<bool?> RxNormIsCurrentAsync(string rxcui);
     }
 }
 

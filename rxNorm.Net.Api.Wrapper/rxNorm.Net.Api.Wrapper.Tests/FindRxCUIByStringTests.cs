@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System;
-
+﻿
 namespace rxNorm.Net.Api.Wrapper.Tests;
 
 public class FindRxCUIByStringTests
@@ -18,6 +13,24 @@ public class FindRxCUIByStringTests
         _rxNormClient = new RxNormClient(_httpClient);
     }
 
+    [Fact]
+    public async void RxNormIsCurrent_ReturnsTrue()
+    {
+        bool? result = await _rxNormClient.RxNormIsCurrentAsync("435");
+        Assert.True(result);
+    }
+    [Fact]
+    public async void RxNormIsCurrent_ReturnsFalse()
+    {
+        bool? result = await _rxNormClient.RxNormIsCurrentAsync("InvalidRxCUI"); //Invalid RxCUI, should return false
+        Assert.False(result);
+    }
+    [Fact]
+    public async void RxNormIsCurrent_ReturnsNull()
+    {
+        bool? result = await _rxNormClient.RxNormIsCurrentAsync("  "); //Whitespace input, should return null
+        Assert.Null(result);
+    }
     [Fact]
     public async void GetRxCUIs_CurrentScopeSearch_FindsMatch()
     {
