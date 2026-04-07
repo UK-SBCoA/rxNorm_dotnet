@@ -14,21 +14,21 @@ public class FindRxCUIByStringTests
     }
 
     [Fact]
-    public async void RxNormIsCurrent_ReturnsTrue()
+    public async void RxNormIsActive_ReturnsTrue()
     {
-        bool? result = await _rxNormClient.RxNormIsCurrentAsync("435");
+        bool? result = await _rxNormClient.RxNormIsActiveAsync("435");
         Assert.True(result);
     }
     [Fact]
-    public async void RxNormIsCurrent_ReturnsFalse()
+    public async void RxNormIsActive_ReturnsFalse()
     {
-        bool? result = await _rxNormClient.RxNormIsCurrentAsync("InvalidRxCUI"); //Invalid RxCUI, should return false
+        bool? result = await _rxNormClient.RxNormIsActiveAsync("123456"); //Invalid RxCUI, should return false
         Assert.False(result);
     }
     [Fact]
-    public async void RxNormIsCurrent_ReturnsNull()
+    public async void RxNormIsActive_ReturnsNull()
     {
-        bool? result = await _rxNormClient.RxNormIsCurrentAsync("  "); //Whitespace input, should return null
+        bool? result = await _rxNormClient.RxNormIsActiveAsync("  "); //Whitespace input, should return null
         Assert.Null(result);
     }
     [Fact]

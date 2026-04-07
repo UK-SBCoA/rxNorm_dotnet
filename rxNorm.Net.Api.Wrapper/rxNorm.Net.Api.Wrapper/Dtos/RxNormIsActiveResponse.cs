@@ -2,7 +2,7 @@
 
 namespace rxNorm.Net.Api.Wrapper.Dtos
 {
-    public class RxNormIsCurrentResponse
+    public class RxNormIsActiveResponse
     {
 
         [JsonPropertyName("rxcuiStatusHistory")]

@@ -28,12 +28,12 @@ namespace rxNorm.Net.Api.Wrapper
         }
 
         /// <summary>
-        ///  Determines whether the specified RxNorm concept is current.
+        ///  Determines whether the specified RxNorm concept has an active status.
         /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.getRxcuiHistoryStatus.html
         /// </summary>
         /// <param rxcui="rxcui">The RxNorm concept identifier</param>
-        /// <returns>True if the RxNorm concept is marked as current, otherwise false.</returns>
-        public async Task<bool?> RxNormIsCurrentAsync(string rxcui)
+        /// <returns>True if the RxNorm concept has an active status, otherwise false.</returns>
+        public async Task<bool?> RxNormIsActiveAsync(string rxcui)
         {
             if (String.IsNullOrWhiteSpace(rxcui))
                 return null;
@@ -46,13 +46,13 @@ namespace rxNorm.Net.Api.Wrapper
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                RxNormIsCurrentResponse? responseDto = JsonSerializer.Deserialize<RxNormIsCurrentResponse>(content);
+                RxNormIsActiveResponse? responseDto = JsonSerializer.Deserialize<RxNormIsActiveResponse>(content);
 
-                var isCurrentValue = responseDto?.StatusHistory?.MetaData?.IsCurrent;
+                var rxStatusValue = responseDto?.StatusHistory?.MetaData?.Status;
 
-                if (isCurrentValue != null)
+                if (rxStatusValue != null)
                 {
-                    return isCurrentValue.Equals("YES", StringComparison.OrdinalIgnoreCase);
+                    return rxStatusValue.Equals("Active", StringComparison.OrdinalIgnoreCase);
                 }
             }
             return false;

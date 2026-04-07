@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using rxNorm.Net.Api.Wrapper.Dtos;
 
@@ -17,7 +16,7 @@ namespace rxNorm.Net.Api.Wrapper
 
         Task<List<DrugsCollection>> GetDrugs(string name);
 
-        Task<bool?> RxNormIsCurrentAsync(string rxcui);
+        Task<bool?> RxNormIsActiveAsync(string rxcui);
     }
 }
 
