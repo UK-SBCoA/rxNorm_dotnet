@@ -14,6 +14,14 @@ public class FindRxCUIByStringTests
     }
 
     [Fact]
+    public async void GetRxcuiStatusHistory_NotNull()
+    {
+        var rxCUI = await _rxNormClient.GetRxcuiStatusHistoryAsync("435");
+
+        Assert.NotNull(rxCUI);
+
+    }
+    [Fact]
     public async void RxNormIsActive_ReturnsTrue()
     {
         bool? result = await _rxNormClient.RxNormIsActiveAsync("435");

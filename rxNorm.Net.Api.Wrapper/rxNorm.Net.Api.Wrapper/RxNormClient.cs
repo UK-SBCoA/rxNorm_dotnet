@@ -4,9 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
 using rxNorm.Net.Api.Wrapper.Enums;
 
@@ -57,6 +55,22 @@ namespace rxNorm.Net.Api.Wrapper
                 }
             }
             return false;
+        }
+
+
+        public async Task<RxcuiHistoryStatusResponse> GetRxcuiStatusHistoryAsync(string rxcui)
+        {
+            if (String.IsNullOrWhiteSpace(rxcui))
+                return null;
+            string url = $"{_options.Host}/rxcui/{rxcui}/historystatus.json";
+            var response = await _httpClient.GetAsync(url);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                RxcuiHistoryStatusResponse? responseDto = JsonSerializer.Deserialize<RxcuiHistoryStatusResponse>(content);
+                return responseDto;
+            }
+            throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
 
         /// <summary>
