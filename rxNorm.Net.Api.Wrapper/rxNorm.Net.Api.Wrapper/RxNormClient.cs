@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
+using rxNorm.Net.Api.Wrapper.Enums;
 
 namespace rxNorm.Net.Api.Wrapper
 {
@@ -52,7 +53,7 @@ namespace rxNorm.Net.Api.Wrapper
 
                 if (rxStatusValue != null)
                 {
-                    return rxStatusValue.Equals("Active", StringComparison.OrdinalIgnoreCase);
+                    return rxStatusValue.Equals(ConceptStatus.Active.ToString(), StringComparison.OrdinalIgnoreCase);
                 }
             }
             return false;
