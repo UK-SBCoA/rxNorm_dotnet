@@ -57,8 +57,13 @@ namespace rxNorm.Net.Api.Wrapper
             return false;
         }
 
-
-        public async Task<RxcuiHistoryStatusResponse> GetRxcuiStatusHistoryAsync(string rxcui)
+        /// <summary>
+        ///  Determines the status of the specified RxNorm concept.
+        /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.getRxcuiHistoryStatus.html
+        /// </summary>
+        /// <param rxcui="rxcui">The RxNorm concept identifier</param>
+        /// <returns>Description of the concept's status</returns>
+        public async Task<string?> GetRxcuiStatusAsync(string rxcui)
         {
             if (String.IsNullOrWhiteSpace(rxcui))
                 return null;
@@ -67,8 +72,17 @@ namespace rxNorm.Net.Api.Wrapper
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                RxcuiHistoryStatusResponse? responseDto = JsonSerializer.Deserialize<RxcuiHistoryStatusResponse>(content);
-                return responseDto;
+                var responseDto = JsonSerializer.Deserialize<RxcuiHistoryStatusResponse>(content);
+                var rxStatusValue = responseDto?.RxcuiStatusHistory.MetaData.Status;
+
+                if (rxStatusValue != null)
+                {
+                    return rxStatusValue;
+                }
+                else
+                {
+                    return "No status information available for the provided RxCUI.";
+                }
             }
             throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }

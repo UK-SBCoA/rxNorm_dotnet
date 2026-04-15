@@ -18,7 +18,7 @@ namespace rxNorm.Net.Api.Wrapper
 
         Task<bool?> RxNormIsActiveAsync(string rxcui);
 
-        Task<RxcuiHistoryStatusResponse> GetRxcuiStatusHistoryAsync(string rxcui);
+        Task<string?> GetRxcuiStatusAsync(string rxcui);
     }
 }
 
