@@ -63,7 +63,7 @@ namespace rxNorm.Net.Api.Wrapper
         /// </summary>
         /// <param rxcui="rxcui">The RxNorm concept identifier</param>
         /// <returns>Description of the concept's status</returns>
-        public async Task<string?> GetRxcuiStatusAsync(string rxcui)
+        public async Task<string?> GetRxCUIStatusAsync(string rxcui)
         {
             if (String.IsNullOrWhiteSpace(rxcui))
                 return null;
@@ -72,8 +72,8 @@ namespace rxNorm.Net.Api.Wrapper
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                var responseDto = JsonSerializer.Deserialize<RxcuiHistoryStatusResponse>(content);
-                var rxStatusValue = responseDto?.RxcuiStatusHistory.MetaData.Status;
+                var responseDto = JsonSerializer.Deserialize<RxCUIHistoryStatusResponse>(content);
+                var rxStatusValue = responseDto?.RxCUIStatusHistory.MetaData.Status;
 
                 if (rxStatusValue != null)
                 {

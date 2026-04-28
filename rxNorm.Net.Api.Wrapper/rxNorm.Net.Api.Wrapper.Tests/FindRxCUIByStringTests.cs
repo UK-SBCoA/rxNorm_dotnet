@@ -14,9 +14,9 @@ public class FindRxCUIByStringTests
     }
 
     [Fact]
-    public async void GetRxcuiStatus_NotNull()
+    public async void GetRxCUIStatus_NotNull()
     {
-        var rxCUI = await _rxNormClient.GetRxcuiStatusAsync("435");
+        var rxCUI = await _rxNormClient.GetRxCUIStatusAsync("435");
 
         Assert.NotNull(rxCUI);
 
