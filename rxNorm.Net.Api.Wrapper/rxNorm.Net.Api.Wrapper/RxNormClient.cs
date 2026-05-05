@@ -4,10 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using rxNorm.Net.Api.Wrapper.Dtos;
+using rxNorm.Net.Api.Wrapper.Enums;
 
 namespace rxNorm.Net.Api.Wrapper
 {
@@ -25,6 +24,67 @@ namespace rxNorm.Net.Api.Wrapper
         public RxNormClient(HttpClient httpClient, RxNormClientOptions options) : this(httpClient)
         {
             //_options = options ?? throw new ArgumentNullException(nameof(options));
+        }
+
+        /// <summary>
+        ///  Determines whether the specified RxNorm concept has an active status.
+        /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.getRxcuiHistoryStatus.html
+        /// </summary>
+        /// <param rxcui="rxcui">The RxNorm concept identifier</param>
+        /// <returns>True if the RxNorm concept has an active status, otherwise false.</returns>
+        public async Task<bool?> RxNormIsActiveAsync(string rxcui)
+        {
+            if (String.IsNullOrWhiteSpace(rxcui))
+                return null;
+
+            string url = $"{_options.Host}/rxcui/{rxcui}/historystatus.json";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                RxNormIsActiveResponse? responseDto = JsonSerializer.Deserialize<RxNormIsActiveResponse>(content);
+
+                var rxStatusValue = responseDto?.StatusHistory?.MetaData?.Status;
+
+                if (rxStatusValue != null)
+                {
+                    return rxStatusValue.Equals(ConceptStatus.Active.ToString(), StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///  Determines the status of the specified RxNorm concept.
+        /// https://lhncbc.nlm.nih.gov/RxNav/APIs/api-RxNorm.getRxcuiHistoryStatus.html
+        /// </summary>
+        /// <param rxcui="rxcui">The RxNorm concept identifier</param>
+        /// <returns>Description of the concept's status</returns>
+        public async Task<string?> GetRxCUIStatusAsync(string rxcui)
+        {
+            if (String.IsNullOrWhiteSpace(rxcui))
+                return null;
+            string url = $"{_options.Host}/rxcui/{rxcui}/historystatus.json";
+            var response = await _httpClient.GetAsync(url);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var responseDto = JsonSerializer.Deserialize<RxCUIHistoryStatusResponse>(content);
+                var rxStatusValue = responseDto?.RxCUIStatusHistory.MetaData.Status;
+
+                if (rxStatusValue != null)
+                {
+                    return rxStatusValue;
+                }
+                else
+                {
+                    return "No status information available for the provided RxCUI.";
+                }
+            }
+            throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}.");
         }
 
         /// <summary>
