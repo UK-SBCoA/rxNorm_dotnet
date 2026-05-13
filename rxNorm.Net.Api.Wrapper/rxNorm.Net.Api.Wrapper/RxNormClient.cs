@@ -32,10 +32,10 @@ namespace rxNorm.Net.Api.Wrapper
         /// </summary>
         /// <param rxcui="rxcui">The RxNorm concept identifier</param>
         /// <returns>True if the RxNorm concept has an active status, otherwise false.</returns>
-        public async Task<bool?> RxNormIsActiveAsync(string rxcui)
+        public async Task<bool> RxNormIsActiveAsync(string rxcui)
         {
             if (String.IsNullOrWhiteSpace(rxcui))
-                return null;
+               throw new ArgumentException("Value cannot be null or whitespace.");
 
             string url = $"{_options.Host}/rxcui/{rxcui}/historystatus.json";
 
@@ -63,10 +63,11 @@ namespace rxNorm.Net.Api.Wrapper
         /// </summary>
         /// <param rxcui="rxcui">The RxNorm concept identifier</param>
         /// <returns>Description of the concept's status</returns>
-        public async Task<string?> GetRxCUIStatusAsync(string rxcui)
+        public async Task<string> GetRxCUIStatusAsync(string rxcui)
         {
             if (String.IsNullOrWhiteSpace(rxcui))
-                return null;
+                throw new ArgumentException("RxCUI cannot be null or whitespace.");
+
             string url = $"{_options.Host}/rxcui/{rxcui}/historystatus.json";
             var response = await _httpClient.GetAsync(url);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)

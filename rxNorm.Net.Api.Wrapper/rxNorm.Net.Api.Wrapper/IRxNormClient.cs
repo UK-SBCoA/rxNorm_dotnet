@@ -16,9 +16,9 @@ namespace rxNorm.Net.Api.Wrapper
 
         Task<List<DrugsCollection>> GetDrugs(string name);
 
-        Task<bool?> RxNormIsActiveAsync(string rxcui);
+        Task<bool> RxNormIsActiveAsync(string rxcui);
 
-        Task<string?> GetRxCUIStatusAsync(string rxcui);
+        Task<string> GetRxCUIStatusAsync(string rxcui);
     }
 }
 

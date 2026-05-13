@@ -22,23 +22,25 @@ public class FindRxCUIByStringTests
 
     }
     [Fact]
+    public async void GetRxCUIStatus_ThrowsExceptionForWhitespaceInput()
+    {
+        Assert.Throws<ArgumentException>(() => _rxNormClient.GetRxCUIStatusAsync("  ").GetAwaiter().GetResult());
+    }
+
+    [Fact]
     public async void RxNormIsActive_ReturnsTrue()
     {
         bool? result = await _rxNormClient.RxNormIsActiveAsync("435");
         Assert.True(result);
     }
+
     [Fact]
     public async void RxNormIsActive_ReturnsFalse()
     {
         bool? result = await _rxNormClient.RxNormIsActiveAsync("123456"); //Invalid RxCUI, should return false
         Assert.False(result);
     }
-    [Fact]
-    public async void RxNormIsActive_ReturnsNull()
-    {
-        bool? result = await _rxNormClient.RxNormIsActiveAsync("  "); //Whitespace input, should return null
-        Assert.Null(result);
-    }
+
     [Fact]
     public async void GetRxCUIs_CurrentScopeSearch_FindsMatch()
     {
